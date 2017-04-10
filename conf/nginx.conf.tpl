@@ -81,7 +81,23 @@ http {
     }
 
     location / {
-      ${FALLBACK_DIRECTIVES}
+      proxy_http_version 1.1;
+      proxy_connect_timeout 10s;
+      proxy_send_timeout 10s;
+      proxy_read_timeout 10s;
+      proxy_redirect off;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-Server $http_host;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Request-Start "t=${msec}";
+
+      if ($http_hypothesis_test_migration != "1") {
+        ${FALLBACK_DIRECTIVES}
+      }
+
+      if ($http_hypothesis_test_migration = "1") {
+        proxy_pass http://web;
+      }
     }
   }
 

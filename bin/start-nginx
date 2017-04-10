@@ -17,7 +17,6 @@ if [ -n "$FALLBACK_UPSTREAM" ]; then
     # We store the upstream endpoint in a variable to trigger dynamic resolution
     # of the upstream hostname.
     FALLBACK_DIRECTIVES=$({
-        echo 'proxy_set_header Host $host;'
         echo 'set $fallback_upstream "'"${FALLBACK_UPSTREAM}"'";'
         echo 'proxy_pass $fallback_upstream;'
     })
